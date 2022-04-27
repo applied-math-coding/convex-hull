@@ -3,10 +3,10 @@ extern crate rocket;
 mod graham_scan;
 mod stack;
 use graham_scan::Point;
+use rocket::fs::{relative, FileServer};
 use rocket::serde::json::Json;
-use rocket_contrib::serve::StaticFiles;
 
-#[get("/")]
+#[get("/test")]
 fn index() -> &'static str {
   "hello world"
 }
@@ -18,7 +18,9 @@ fn convex_hull(points: Json<Vec<Point>>) -> Json<Vec<Point>> {
 
 #[launch]
 fn rocket() -> _ {
-  rocket::build().mount("/", routes![convex_hull, index])
+  rocket::build()
+    .mount("/", FileServer::from(relative!("client/dist")))
+    .mount("/", routes![convex_hull, index])
 }
 
 #[cfg(test)]
