@@ -14,7 +14,7 @@ impl Point {
   }
 
   fn norm(&self) -> f32 {
-    f32::sqrt(self.x * self.x + self.y + self.y)
+    f32::sqrt(self.x * self.x + self.y * self.y)
   }
 }
 
@@ -79,7 +79,6 @@ pub fn convex_hull(mut points: Vec<Point>) -> Stack<Point> {
   hull.push(points.remove(0));
   for r in points.iter() {
     loop {
-      //TODO can get None
       let (p, q) = (hull.peek_next().unwrap(), hull.peek().unwrap());
       if compute_sine(&(-p + q), &(-q + r)) < 0.0 {
         hull.pop();
@@ -155,40 +154,5 @@ mod tests {
     ];
     hull.reverse();
     assert_eq!(convex_hull(points).into_vec(), hull);
-  }
-
-  #[test]
-  fn test_convex_hull_3() {
-    let points = vec![
-      Point {
-        x: 348.91381375073905,
-        y: 75.87083100406255,
-      },
-      Point {
-        x: 344.71655730398265,
-        y: 286.63897616585245,
-      },
-      Point {
-        x: 351.7299049208591,
-        y: 328.851613805936,
-      },
-      Point {
-        x: 250.43407744865576,
-        y: 311.6015624090712,
-      },
-      Point {
-        x: 8.31163580345018,
-        y: 471.6612349061805,
-      },
-    ];
-    println!("{:?}", convex_hull(points).into_vec());
-    // let mut hull = vec![ TODO
-    //   Point::new(1.0, 0.0),
-    //   Point::new(2.0, 0.0),
-    //   Point::new(3.5, 0.5),
-    //   Point::new(2.0, 3.0),
-    // ];
-    // hull.reverse();
-    // assert_eq!(convex_hull(points).into_vec(), hull);
   }
 }
