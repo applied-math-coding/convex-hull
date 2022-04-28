@@ -20,7 +20,7 @@ fn convex_hull(points: Json<Vec<Point>>) -> Json<Vec<Point>> {
 fn rocket() -> _ {
   rocket::build()
     .mount("/", FileServer::from(relative!("client/dist")))
-    .mount("/", routes![convex_hull, index])
+    .mount("/api", routes![convex_hull, index])
 }
 
 #[cfg(test)]
@@ -39,7 +39,7 @@ mod tests {
     ];
     use rocket::local::blocking::Client;
     let client = Client::tracked(super::rocket()).unwrap();
-    let response = client.post("/convex-hull").json(&points).dispatch();
+    let response = client.post("/api/convex-hull").json(&points).dispatch();
     assert_eq!(
       response.into_string().unwrap(),
       "[{\"x\":2.0,\"y\":3.0},{\"x\":3.0,\"y\":1.0},{\"x\":2.0,\"y\":0.0},{\"x\":1.0,\"y\":0.0}]"
