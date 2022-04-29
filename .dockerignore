@@ -1,0 +1,5 @@
+*/.vscode
+client/dist
+client/node_module
+
+target
