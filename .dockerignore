@@ -1,5 +1,7 @@
 */.vscode
 client/dist
-client/node_module
+client/node_modules
+.git
+*/todo
 
 target
