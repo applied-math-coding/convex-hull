@@ -1,16 +1,24 @@
 import { defineComponent } from 'vue';
 import Button from 'primevue/button';
 import InputNumber from 'primevue/inputnumber';
+import type { ConvexHullService } from '@/services/convex-hull.service';
+import { ConvexHull } from '@/models/convex-hull';
+import { Point } from '@/models/point';
 
-type Point = { x: number, y: number };
+type Coordinates = { x: number, y: number };
 let ctx: CanvasRenderingContext2D;
 
 export default defineComponent({
   components: { Button, InputNumber },
+  inject: ['convexHullService'],
   data() {
     return {
       numberPoints: 10,
-      computing: false
+      computing: false,
+      saving: false,
+      inputPoints: null as unknown as Coordinates[],
+      outputPoints: null as unknown as Coordinates[],
+      convexHullService: this.convexHullService as unknown as ConvexHullService
     }
   },
   mounted() {
@@ -21,21 +29,26 @@ export default defineComponent({
     this.handleCreate();
   },
   methods: {
-    handleCreate() {
+    async handleCreate() {
       clearCanvas();
-      const points = createRandomPoints(this.numberPoints);
-      renderPoints(points);
-      this.computeConvexHull(points);
+      this.inputPoints = createRandomPoints(this.numberPoints);
+      renderPoints(this.inputPoints);
+      this.outputPoints = await this.computeConvexHull(this.inputPoints);
     },
-    async computeConvexHull(points: Point[]) {
-      try {
-        this.computing = true;
-        renderHull(await fetchConvexHull(points));
-      } catch (e) {
-        console.error(e);
-      } finally {
-        this.computing = false;
-      }
+    async handleSave() {
+      this.saving = true;
+      await this.convexHullService.saveConvexHull(
+        new ConvexHull(),
+        new Point(JSON.stringify(this.inputPoints), JSON.stringify(this.outputPoints))
+      );
+      this.saving = false;
+    },
+    async computeConvexHull(points: Coordinates[]): Promise<Coordinates[]> {
+      this.computing = true;
+      const hull = await fetchConvexHull(points);
+      renderHull(hull);
+      this.computing = false;
+      return hull;
     }
   }
 });
@@ -44,7 +57,7 @@ function clearCanvas() {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
-function fetchConvexHull(points: Point[]): Promise<Point[]> {
+function fetchConvexHull(points: Coordinates[]): Promise<Coordinates[]> {
   return fetch('/api/convex-hull', {
     method: 'POST',
     headers: {
@@ -54,7 +67,7 @@ function fetchConvexHull(points: Point[]): Promise<Point[]> {
   }).then(r => r.json());
 }
 
-function renderHull(points: Point[]) {
+function renderHull(points: Coordinates[]) {
   points = points.map(p => toCanvasCoords(p));
   ctx.beginPath();
   points.forEach((p, idx) => {
@@ -69,7 +82,7 @@ function renderHull(points: Point[]) {
   ctx.stroke();
 }
 
-function renderPoints(points: Point[]) {
+function renderPoints(points: Coordinates[]) {
   points
     .map(p => toCanvasCoords(p))
     .forEach(p => {
@@ -79,11 +92,11 @@ function renderPoints(points: Point[]) {
     });
 }
 
-function toCanvasCoords(p: Point): Point {
+function toCanvasCoords(p: Coordinates): Coordinates {
   return { x: p.x, y: ctx.canvas.height - p.y };
 }
 
-function createRandomPoints(count: number): Point[] {
+function createRandomPoints(count: number): Coordinates[] {
   return [...Array(count)]
     .map(() => ({ x: Math.random() * ctx.canvas.width, y: Math.random() * ctx.canvas.height }));
 }

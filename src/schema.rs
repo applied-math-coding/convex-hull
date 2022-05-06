@@ -1,8 +1,8 @@
 table! {
     convex_hulls (id) {
         id -> Int4,
-        name -> Text,
-        created -> Timestamp,
+        name -> Nullable<Text>,
+        created -> Nullable<Timestamp>,
     }
 }
 
@@ -11,7 +11,7 @@ table! {
         id -> Int4,
         input -> Json,
         output -> Json,
-        convex_hull_id -> Int4,
+        convex_hull_id -> Nullable<Int4>,
     }
 }
 

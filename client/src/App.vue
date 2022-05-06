@@ -1,9 +1,15 @@
 <script lang="ts">
 import ConvexHullPlot from "./components/ConvexHullPlot.vue";
 import { defineComponent } from "vue";
+import { ConvexHullService } from "./services/convex-hull.service";
 
 export default defineComponent({
   components: { ConvexHullPlot },
+  provide(){
+    return {
+      convexHullService: new ConvexHullService()
+    }
+  }
 });
 </script>
 

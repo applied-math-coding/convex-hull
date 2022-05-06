@@ -1,2 +1,2 @@
-DROP TABLE IF EXISTS convex_hulls;
 DROP TABLE IF EXISTS points;
+DROP TABLE IF EXISTS convex_hulls;

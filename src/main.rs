@@ -24,7 +24,7 @@ fn convex_hull(points: Json<Vec<Point>>) -> Json<Vec<Point>> {
   Json(graham_scan::convex_hull(points.into_inner()).into_vec())
 }
 
-#[post("/db/convex-hull", data="<payload>")]
+#[post("/db/convex-hulls", data="<payload>")]
 fn save_convex_hull(payload: Json<(models::NewConvexHull, models::NewPoint)>) -> Json<(models::ConvexHull, models::Point)> {
   let (new_convex_hull, new_points) = payload.into_inner();
   Json(convex_hull_service::create_convex_hull(new_convex_hull, new_points))

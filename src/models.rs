@@ -7,15 +7,15 @@ use rocket::serde::{Deserialize, Serialize};
 #[table_name = "convex_hulls"]
 pub struct ConvexHull{
     pub id: i32,
-    pub name: String,
-    pub created: std::time::SystemTime    
+    pub name: Option<String>,
+    pub created: Option<std::time::SystemTime>    
 }
 
 #[derive(Insertable, Deserialize)]
 #[table_name = "convex_hulls"]
 pub struct NewConvexHull{
-    pub name: String,
-    pub created: std::time::SystemTime    
+    pub name: Option<String>,
+    pub created: Option<std::time::SystemTime>
 }
 
 #[derive(Queryable, Associations, Identifiable, Serialize)]
@@ -25,7 +25,7 @@ pub struct Point{
    pub id:i32,
    pub input: serde_json::Value,
    pub output: serde_json::Value,
-   pub convex_hull_id: i32
+   pub convex_hull_id: Option<i32>
 }
 
 #[derive(Insertable, Deserialize, Associations)]
@@ -33,5 +33,5 @@ pub struct Point{
 pub struct NewPoint{
     pub input: serde_json::Value,
     pub output: serde_json::Value,
-    pub convex_hull_id: i32
+    pub convex_hull_id: Option<i32>
 }

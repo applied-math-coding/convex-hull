@@ -12,6 +12,9 @@
         :showButtons="true"
       />
     </div>
+    <div>
+      <Button label="Save" :v-if="!computing" :loading="saving" @click="handleSave()" />
+    </div>
   </div>
   <div class="canvas-container">
     <canvas ref="canvas"></canvas>
