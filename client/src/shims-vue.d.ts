@@ -1,0 +1,1 @@
+declare module '*.vue';  // in order to make ts allowing to import .vue files

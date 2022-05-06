@@ -1,10 +1,10 @@
 <script lang="ts">
-import ConvexHullPlot from "./components/ConvexHullPlot.vue";
+import ConvexHullCreator from "./components/ConvexHullCreator/ConvexHullCreator.vue";
 import { defineComponent } from "vue";
 import { ConvexHullService } from "./services/convex-hull.service";
 
 export default defineComponent({
-  components: { ConvexHullPlot },
+  components: { ConvexHullCreator },
   provide(){
     return {
       convexHullService: new ConvexHullService()
@@ -18,7 +18,7 @@ export default defineComponent({
     <h1 class="text-center">Convex Hull of Points</h1>
   </header>
   <main>
-    <ConvexHullPlot></ConvexHullPlot>
+    <ConvexHullCreator></ConvexHullCreator>
   </main>
 </template>
 

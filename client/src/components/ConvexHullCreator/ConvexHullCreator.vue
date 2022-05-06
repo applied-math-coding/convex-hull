@@ -13,13 +13,21 @@
       />
     </div>
     <div>
-      <Button label="Save" :v-if="!computing" :loading="saving" @click="handleSave()" />
+      <Button
+        label="Save"
+        :v-if="!computing"
+        :loading="saving"
+        @click="handleSave()"
+      />
     </div>
   </div>
   <div class="canvas-container">
-    <canvas ref="canvas"></canvas>
+    <ConvexHullPlot
+      :input-points="inputPoints"
+      :output-points="outputPoints"
+    ></ConvexHullPlot>
   </div>
 </template>
 
-<script lang="ts" src="./ConvexHullPlot.ts"></script>
-<style lang="scss" src="./ConvexHullPlot.scss"></style>
+<script lang="ts" src="./ConvexHullCreator.ts"></script>
+<style lang="scss" src="./ConvexHullCreator.scss"></style>
