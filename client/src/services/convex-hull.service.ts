@@ -13,5 +13,21 @@ export class ConvexHullService {
             body: JSON.stringify([ch, p])
         }).then(r => r.json());
     }
+
+    async fetchConvexHulls(): Promise<ConvexHull[]> {
+        return fetch(`${this.BASE_URL}`).then(r => r.json());
+    }
+
+    async fetchPoints(convexHullId: number): Promise<Point> {
+        return fetch(`${this.BASE_URL}/${encodeURIComponent(convexHullId)}/points`)
+            .then(r => r.json());
+    }
+
+    async deleteConvecHull(id: number) {
+        return fetch(`${this.BASE_URL}/${encodeURIComponent(id)}`, {
+            method: 'DELETE'
+        });
+    }
+
 }
 

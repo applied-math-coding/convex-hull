@@ -30,4 +30,4 @@
 </template>
 
 <script lang="ts" src="./ConvexHullCreator.ts"></script>
-<style lang="scss" src="./ConvexHullCreator.scss"></style>
+<style lang="scss" src="./ConvexHullCreator.scss" scoped></style>

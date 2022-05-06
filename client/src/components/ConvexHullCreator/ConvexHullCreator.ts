@@ -7,9 +7,7 @@ import { Point } from '@/models/point';
 import type { Coordinates } from '@/models/coordinates';
 import { useStore } from '../store';
 import ConvexHullPlot from '../ConvexHullPlot/ConvexHullPlot.vue';
-import { mapState } from 'pinia';
-
-let ctx: CanvasRenderingContext2D;
+import { mapState, mapWritableState } from 'pinia';
 
 export default defineComponent({
   components: { Button, InputNumber, ConvexHullPlot },
@@ -21,14 +19,15 @@ export default defineComponent({
       saving: false,
       inputPoints: null as unknown as Coordinates[],
       outputPoints: null as unknown as Coordinates[],
-      convexHullService: this.convexHullService as unknown as ConvexHullService
+      convexHullService: this.convexHullService as unknown as ConvexHullService,
     }
   },
   mounted() {
     this.handleCreate();
   },
   computed: {
-    ...mapState(useStore, ['width', 'height'])
+    ...mapState(useStore, ['width', 'height']),
+    ...mapWritableState(useStore, ['convexHulls'])
   },
   methods: {
     async handleCreate() {
@@ -37,10 +36,11 @@ export default defineComponent({
     },
     async handleSave() {
       this.saving = true;
-      await this.convexHullService.saveConvexHull(
+      const [c,] = await this.convexHullService.saveConvexHull(
         new ConvexHull(),
         new Point(JSON.stringify(this.inputPoints), JSON.stringify(this.outputPoints))
       );
+      this.convexHulls.push(c);
       this.saving = false;
     },
     async computeConvexHull(points: Coordinates[]): Promise<Coordinates[]> {

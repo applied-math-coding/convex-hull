@@ -3,61 +3,66 @@ import { defineComponent, type PropType } from "vue";
 import { useStore } from '../store';
 import { mapState } from 'pinia';
 
-let ctx: CanvasRenderingContext2D;
-
 export default defineComponent({
     props: {
         inputPoints: Object as PropType<Coordinates[]>,
         outputPoints: Object as PropType<Coordinates[]>,
         scale: { type: Number, default: 1 }
     },
+    data() {
+        return {
+            ctx: null as unknown as CanvasRenderingContext2D
+        }
+    },
     mounted() {
         const canvas = this.$refs.canvas as HTMLCanvasElement;
-        ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        canvas.width = this.width;
-        canvas.height = this.height;
+        this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        canvas.width = this.width * this.scale;
+        canvas.height = this.height * this.scale;
+        this.inputPoints && this.renderPoints(this.inputPoints);
+        this.outputPoints && this.renderHull(this.outputPoints);
     },
     computed: {
         ...mapState(useStore, ['width', 'height'])
     },
     watch: {
-        inputPoints(n, o) {
+        inputPoints(n) {
             this.clearCanvas();
             this.renderPoints(n);
         },
-        outputPoints(n, o) {
+        outputPoints(n) {
             this.renderHull(n);
         }
     },
     methods: {
         clearCanvas() {
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         },
         renderHull(points: Coordinates[]) {
             points = points.map(p => this.toCanvasCoords(p));
-            ctx.beginPath();
+            this.ctx.beginPath();
             points.forEach((p, idx) => {
                 if (idx === 0) {
-                    ctx.moveTo(p.x, p.y);
+                    this.ctx.moveTo(p.x, p.y);
                 } else {
-                    ctx.lineTo(p.x, p.y);
+                    this.ctx.lineTo(p.x, p.y);
                 }
             });
-            ctx.lineTo(points[0].x, points[0].y);
-            ctx.strokeStyle = '#0d89ec';
-            ctx.stroke();
+            this.ctx.lineTo(points[0].x, points[0].y);
+            this.ctx.strokeStyle = '#0d89ec';
+            this.ctx.stroke();
         },
         renderPoints(points: Coordinates[]) {
             points
                 .map(p => this.toCanvasCoords(p))
                 .forEach(p => {
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
-                    ctx.fill();
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, 3 * this.scale, 0, 2 * Math.PI);
+                    this.ctx.fill();
                 });
         },
         toCanvasCoords(p: Coordinates): Coordinates {
-            return { x: p.x * this.scale, y: (ctx.canvas.height - p.y) * this.scale };
+            return { x: p.x * this.scale, y: this.ctx.canvas.height - p.y * this.scale };
         }
     }
 });

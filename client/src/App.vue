@@ -1,15 +1,16 @@
 <script lang="ts">
 import ConvexHullCreator from "./components/ConvexHullCreator/ConvexHullCreator.vue";
+import ConvexHullCards from "./components/ConvexHullCards/ConvexHullCards.vue";
 import { defineComponent } from "vue";
 import { ConvexHullService } from "./services/convex-hull.service";
 
 export default defineComponent({
-  components: { ConvexHullCreator },
-  provide(){
+  components: { ConvexHullCreator, ConvexHullCards },
+  provide() {
     return {
-      convexHullService: new ConvexHullService()
-    }
-  }
+      convexHullService: new ConvexHullService(),
+    };
+  },
 });
 </script>
 
@@ -19,6 +20,7 @@ export default defineComponent({
   </header>
   <main>
     <ConvexHullCreator></ConvexHullCreator>
+    <ConvexHullCards></ConvexHullCards>
   </main>
 </template>
 
