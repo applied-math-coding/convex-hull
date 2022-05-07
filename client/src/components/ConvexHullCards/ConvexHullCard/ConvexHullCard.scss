@@ -1,0 +1,15 @@
+.card {
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .actions {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+}

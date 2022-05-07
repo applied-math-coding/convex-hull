@@ -19,7 +19,9 @@ export default defineComponent({
     <h1 class="text-center">Convex Hull of Points</h1>
   </header>
   <main>
-    <ConvexHullCreator></ConvexHullCreator>
+    <div class="mb-3">
+      <ConvexHullCreator></ConvexHullCreator>
+    </div>
     <ConvexHullCards></ConvexHullCards>
   </main>
 </template>
