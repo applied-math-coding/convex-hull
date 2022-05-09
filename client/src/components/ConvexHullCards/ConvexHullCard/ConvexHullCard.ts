@@ -13,7 +13,10 @@ export default defineComponent({
     components: { ConvexHullPlot, Button },
     inject: ['convexHullService'],
     props: {
-        convexHull: ConvexHull
+        convexHull: {
+            type: ConvexHull,
+            required: true
+        }
     },
     data() {
         return {
