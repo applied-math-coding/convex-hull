@@ -1,0 +1,16 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - "db"
+    command: ["./wait-for-it.sh", "db:5432", "--", "./target/release/convex-hull"]
+  db:
+    image: postgres:14.2
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=convexhull
